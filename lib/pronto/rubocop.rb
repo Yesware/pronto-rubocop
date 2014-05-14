@@ -6,6 +6,10 @@ module Pronto
     def initialize
       @inspector = ::Rubocop::FileInspector.new({})
       @config_store = ::Rubocop::ConfigStore.new
+
+      if ((block = self.class.instance_configure_block))
+        instance_eval &block
+      end
     end
 
     def run(patches, _)
@@ -42,5 +46,14 @@ module Pronto
         severity
       end
     end
+
+    def self.instance_configure(&block)
+      @instance_configure_block = block
+    end
+
+    def self.instance_configure_block
+      @instance_configure_block
+    end
+
   end
 end
